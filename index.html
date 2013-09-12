@@ -3,9 +3,9 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title></title>
+        <title>1M Hack Night 20130912</title>
         <meta name="description" content="">
-        <meta name="viewport" content="width=device-width">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
         <link rel="stylesheet" href="css/bootstrap.min.css">
         <style>
@@ -32,47 +32,40 @@
           </button>
           <a class="navbar-brand" href="#">1M Hack Night 20130912</a>
         </div>
+        <div class="navbar-collapse collapse">
           <form class="navbar-form navbar-right">
             <fb:login-button show-faces="true" width="200" max-rows="1"></fb:login-button>
           </form>
-        </div><!--/.navbar-collapse -->
-      </div>
-    </div>
-
-    <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div class="jumbotron">
-      <div id="map-canvas" style="height:500px"></div>
-    </div>
-
-    <div class="container">
-      <!-- Example row of columns -->
-      <div class="row">
-        <div class="col-lg-4">
-          <h2>Heading</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn btn-default" href="#">View details &raquo;</a></p>
         </div>
       </div>
+    </div>
 
-      <hr>
+    <div class="jumbotron">
+      <style>
+      .map-canvas,
+      .map-canvas * { .box-sizing(content-box); }
+      </style>
+      <div id="map-canvas" style="height:700px"></div>
+    </div>
 
-      <footer>
-        <p>&copy; 1000mercis 2013</p>
-      </footer>
-    </div> <!-- /container -->        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.1.min.js"><\/script>')</script>
+    <div id="fb-root"></div>
+    </div>
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.1.min.js"><\/script>')</script>
 
-        <script src="js/vendor/bootstrap.min.js"></script>
+    <script src="js/vendor/bootstrap.min.js"></script>
 
-<div id="fb-root"></div>
+    <script src="js/gmaps.js"></script>
+    <script src="js/main.js"></script>
+
 <script>
   window.fbAsyncInit = function() {
-    // init the FB JS SDK
     FB.init({
-      appId      : '222197941268493',                        // App ID from the app dashboard
-      channelUrl : '//hacknight.com/channel.html', // Channel file for x-domain comms
-      status     : true,                                 // Check Facebook Login status
-      xfbml      : true                                  // Look for social plugins on the page
+      appId      : '222197941268493',
+      channelUrl : '//hacknight.com/channel.html',
+      status     : true,
+      xfbml      : true
     });
 
     FB.Event.subscribe('auth.authResponseChange', function(response) {
@@ -82,20 +75,19 @@
       } else if (response.status === 'not_authorized') {
         // Loggué FB mais appli non autorisée
         // On affiche la popup de login
-        FB.login({scope: 'user_hometown,user_friends,friends_hometown'});
+        FB.login({scope: 'user_friends,friends_hometown'});
       } else {
         // Pas Loggué FB
         // On affiche la popup de login et on verra plus tard s'il a autorisé l'appli
-        FB.login({scope: 'user_hometown,user_friends,friends_hometown'});
+        FB.login({scope: 'user_friends,friends_hometown'});
       }
     });
   };
   function getFriends() {
     FB.api('/fql?q=select%20last_name,%20first_name,hometown_location,uid,pic_square%20from%20user%20where%20uid%20in%20(select%20uid2%20from%20friend%20where%20uid1%20%3D%20me())', function(response) {
       for (var i = response.data.length - 1; i >= 0; i--) {
-        console.log(response.data[i]);
         if(response.data[i].hometown_location && response.data[i].hometown_location.latitude && response.data[i].hometown_location.longitude && response.data[i].pic_square) {
-          hackmap.addMarker(response.data[i].hometown_location.latitude, response.data[i].hometown_location.longitude, response.data[i].pic_square);
+          hackmap.addMarker(response.data[i].hometown_location.latitude, response.data[i].hometown_location.longitude, response.data[i].pic_square, response.data[i].first_name + ' ' + response.data[i].last_name);
         }
         
       };
@@ -111,7 +103,5 @@
      fjs.parentNode.insertBefore(js, fjs);
    }(document, 'script', 'facebook-jssdk'));
 </script>
-        <script src="js/gmaps.js"></script>
-        <script src="js/main.js"></script>
     </body>
 </html>
